@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+@layer components {
+
+    .border-before::before,
+    .border-after::after {
+        @apply absolute left-0 w-full h-[1px] bg-gray-300 content-[''];
+    }
+
+    .border-before::before {
+        @apply top-0;
+    }
+
+    .border-after::after {
+        @apply bottom-0;
+    }
+
+    .custom-li {
+        @apply py-4 px-3 text-base
+    }
+
+
+
+}
+
+@layer utilities {
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
+    }
+}
