@@ -8,13 +8,21 @@ import { useEffect, useRef, useState } from "react";
 export default function Header() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [isLanguageOpen, setIsLanguageOpen] = useState(false)
-
+    const [showHeader,setShowHeader] = useState(false)
     const toggleSideBar = () => {
         setIsSidebarOpen(!isSidebarOpen)
     }
     const toggleLanguageSideBar = () => {
         setIsLanguageOpen(!isLanguageOpen);
     };
+    useEffect(()=>{
+        setTimeout(() => {
+            setShowHeader(true)
+        }, 1000);
+    },[])
+    if(!showHeader){
+        return null
+    }
 
     return (
         <div className="flex items-center gap-4 md:p-0 p-2 md:border-0 xl:border-b border-black">
