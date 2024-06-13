@@ -51,6 +51,12 @@ const Home = () => {
                         <div className="flex  justify-between mt-4">
                             <span> font</span>
                             <span> font</span>
+                            <span> font</span>
+                            <span> font</span>
+                            <span> font</span>
+                            <span> fo---asdfasdfasdfasdfasdfasdfasdfad-------nt</span>
+                            <span> font</span>
+                            <span> font</span>
                         </div>
                         <div className="flex  justify-end">
                             <span>font starting at</span>
