@@ -54,7 +54,7 @@ const Home = () => {
                             <span> font</span>
                             <span> font</span>
                             <span> font</span>
-                            <span> fo---asdfasdfasdfasd-------nt</span>
+                            <span> fo---asdfasdfasdfasdfasdfasdfasdfad-------nt</span>
                             <span> font</span>
                             <span> font</span>
                         </div>
