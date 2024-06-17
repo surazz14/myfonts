@@ -16,7 +16,7 @@ import Select from "./Select";
 import "../style/DashboardDetail.css";
 SyntaxHighlighter.registerLanguage("javascript", js);
 
-const genAI = new GoogleGenerativeAI("AIzaSyB2qiDu0VoDzJCH6md0WRkBCu0WnapvmfM"); // Replace with your actual API key
+const genAI = new GoogleGenerativeAI(""); // Replace with your actual API key
 
 export const clsColorMap = (value) => {
   let color = "#4CAF50";
