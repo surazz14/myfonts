@@ -6,6 +6,9 @@ import Button from "@mui/material/Button";
 import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import MarkdownPreview from "@uiw/react-markdown-preview";
+import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import axios from "axios";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -62,10 +65,7 @@ export default function DashboardDetail({ id }) {
   const [currentCWV, setCurrentCWV] = useState("lcp");
   const [data, setData] = useState();
   const [modelData, setModel] = useState("");
-  const [modelData1, setModel1] = useState("");
-  const [modelData2, setModel2] = useState("");
-  const [modelData3, setModel3] = useState("");
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchDataById = async () => {
       const url = `http://localhost:3000/peformance/${id}`;
@@ -86,65 +86,19 @@ export default function DashboardDetail({ id }) {
       });
       console.log("this is model", model);
       const response = await model.generateContent(prompt);
-      console.log(
-        "this is response",
-        response.response.candidates[0].content.parts[0].text
-      );
+      setLoading(false);
       setModel(response.response.candidates[0].content.parts[0].text);
-    } catch (error) {
-      console.error("Error fetching data from Gemini API:", error);
-      // Handle errors gracefully, e.g., display an error message to the user
-    }
-  };
-
-  const getAnswer1 = async (prompt) => {
-    try {
-      const model = await genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
-      });
-      console.log("this is model", model);
-      const response = await model.generateContent(prompt);
       console.log(
         "this is response",
         response.response.candidates[0].content.parts[0].text
       );
-      setModel1(response.response.candidates[0].content.parts[0].text);
-    } catch (error) {
-      console.error("Error fetching data from Gemini API:", error);
-      // Handle errors gracefully, e.g., display an error message to the user
-    }
-  };
-
-  const getAnswer2 = async (prompt) => {
-    try {
-      const model = await genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
-      });
-      console.log("this is model", model);
-      const response = await model.generateContent(prompt);
-      console.log(
-        "this is response",
-        response.response.candidates[0].content.parts[0].text
-      );
-      setModel2(response.response.candidates[0].content.parts[0].text);
-    } catch (error) {
-      console.error("Error fetching data from Gemini API:", error);
-      // Handle errors gracefully, e.g., display an error message to the user
-    }
-  };
-
-  const getAnswer3 = async (prompt) => {
-    try {
-      const model = await genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
-      });
-      console.log("this is model", model);
-      const response = await model.generateContent(prompt);
-      console.log(
-        "this is response",
-        response.response.candidates[0].content.parts[0].text
-      );
-      setModel3(response.response.candidates[0].content.parts[0].text);
+      // const url = `http://localhost:3000/peformance/get-ai-answer/`;
+      // const payload = {
+      //   prompt: prompt,
+      // };
+      //   const response = await axios.post(url,payload);
+      //   console.log("this is response",{response})
+      //   setModel(response.data.response);
     } catch (error) {
       console.error("Error fetching data from Gemini API:", error);
       // Handle errors gracefully, e.g., display an error message to the user
@@ -152,21 +106,14 @@ export default function DashboardDetail({ id }) {
   };
 
   useEffect(() => {
-    if (data?.unused_javascript.title) {
+    if (data?.pr_changes.old_code && data?.pr_changes.changed_part) {
+      const question = `My old code was this ${data?.pr_changes.new_code_code} . I have made these changes ${data?.pr_changes.changed_part}My Core Web Vitals significantly improved after these changes. What are the reasons for this increasement, and how can we further improve our CWV?`;
       getAnswer(
-        `Give me a short description .How to fix,${data?.unused_javascript.title}`
-      );
-      getAnswer1(
-        `Give me a short description .How to fix,${data?.duplicated_javascript.title}`
-      );
-      getAnswer2(
-        `Give me a short description .How to fix,${data?.legacy_javascript.title}`
-      );
-      getAnswer3(
-        `Give me a short description .How to fix,${data?.unsized_images.title}`
+        question
+        // `I have a code snippet that I want to improve the Core Web Vitals of. The code snippet is as follows: ${data?.pr_changes.new_code_code} The part of the code that I want to improve is: ${data?.pr_changes.changed_part}`
       );
     }
-  }, [data?.unused_javascript.title]);
+  }, [data?.pr_changes.old_code, data?.pr_changes.changed_part]);
 
   useEffect(() => {
     const postData = async () => {
@@ -303,140 +250,18 @@ export default function DashboardDetail({ id }) {
       <br />
       <br />
       <Box>
-        <Box className="Opportunities">Opportunities</Box>
+        <Box className="Opportunities">Ai Generated Opportunities</Box>
         <Box>
-          <Box className="opp-data-details">
-            <Box sx={{ fontSize: "24px", display: "flex" }}>
-              <Box>
-                <ReportProblemIcon color="error" />{" "}
-              </Box>
-              &nbsp;
-              <Box className="title-opp">
-                {data?.unused_javascript.title} (
-                {data?.unused_javascript.displayValue})
-              </Box>
-            </Box>
-            <Box sx={{ paddingLeft: "30px", paddingTop: "20px" }}>
-              {data?.unused_javascript.description}
-              <br />
-
-              <Box sx={{ marginTop: "4px" }}>
-                <Box sx={{ paddingLeft: "30px" }}>
-                  <Table details={data?.unused_javascript?.details} />
-                </Box>
-                {modelData ? (
-                  <Box sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    AI Generated Possible Solution
-                  </Box>
-                ) : null}
-                <Box sx={{ fontWeight: 400, fontSize: "large" }}>
-                  {modelData}
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-          <br />
-          <Box className="opp-data-details">
-            <Box sx={{ fontSize: "24px", display: "flex" }}>
-              <Box>
-                <ReportProblemIcon color="error" />{" "}
-              </Box>
-              &nbsp;
-              <Box className="title-opp">
-                <Box className="title-opp">
-                  {data?.duplicated_javascript.title}
-                </Box>
-                <Box
-                  sx={{
-                    paddingTop: "20px",
-                    fontWeight: 400,
-                    fontSize: "large",
-                  }}
-                >
-                  {data?.duplicated_javascript.description}
-                </Box>
-                <Box sx={{ marginTop: "4px" }}>
-                  {modelData1 ? (
-                    <Box sx={{ fontSize: "18px", fontWeight: 500 }}>
-                      AI Generated Possible Solution
-                    </Box>
-                  ) : null}
-                  <Box sx={{ fontWeight: 400, fontSize: "large" }}>
-                    {modelData1}
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-          <br />
-          <Box className="opp-data-details">
-            <Box sx={{ fontSize: "24px", display: "flex" }}>
-              <Box>
-                <ReportProblemIcon color="error" />{" "}
-              </Box>
-              &nbsp;
-              <Box className="title-opp">
-              <Box className="title-opp">
-
-                {data?.legacy_javascript.title}
-                  </Box>
-                <Box sx={{ marginTop: "4px" }}>
-                  <Box
-                    sx={{
-                      paddingTop: "20px",
-                      fontWeight: 400,
-                      fontSize: "large",
-                    }}
-                  >
-                    {data?.legacy_javascript.description}
-                  </Box>
-                  <br />
-                  {modelData2 ? (
-                    <Box sx={{ fontSize: "18px", fontWeight: 500 }}>
-                      AI Generated Possible Solution
-                    </Box>
-                  ) : null}
-                  <Box sx={{ fontWeight: 400, fontSize: "large" }}>
-                    {modelData2}
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-          <br />
-          <Box className="opp-data-details">
-            <Box sx={{ fontSize: "24px", display: "flex" }}>
-              <Box>
-                <ReportProblemIcon color="error" />{" "}
-              </Box>
-              &nbsp;
-              <Box className="title-opp">
-              <Box className="title-opp">
-
-                {data?.unsized_images.title}
-                </Box>
-                <Box
-                  sx={{
-                    paddingTop: "20px",
-                    fontWeight: 400,
-                    fontSize: "large",
-                  }}
-                >
-                  {data?.unsized_images.description}
-                </Box>
-                <Box sx={{ marginTop: "4px" }}>
-                  {modelData3 ? (
-                    <Box sx={{ fontSize: "18px", fontWeight: 500 }}>
-                      AI Generated Possible Solution
-                    </Box>
-                  ) : null}
-                  <Box sx={{ fontWeight: 400, fontSize: "large" }}>
-                    {modelData3}
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
+          {loading && (
+            <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+              <CircularProgress color="success" />
+            </Stack>
+          )}
+        </Box>
+        <Box>
+          {modelData && (
+            <MarkdownPreview source={modelData} style={{ padding: 16 }} />
+          )}
         </Box>
       </Box>
       <br />
